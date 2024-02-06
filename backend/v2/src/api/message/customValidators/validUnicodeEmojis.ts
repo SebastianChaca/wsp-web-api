@@ -26,6 +26,7 @@ export class ContainsValidEmoji implements ValidatorConstraintInterface {
     function escapeRegex(text: string): string {
       return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
     }
+
     return emoticonRegex.test(text);
   }
 
