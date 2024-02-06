@@ -24,24 +24,23 @@
 
 ## Description
 
-1. cd to backend/v1
-2. install project
+1. install project
 
 ```
 npm i
 ```
 
-3. Create `.env` file using `.env.template` as guide
-4. Data base
+2. Create `.env` file using `.env.template` as guide
+3. Data base
 
 ```
   docker compose up -d
 ```
 
-5. Start project
+4. Start project
 
 ```
 npm run start:dev
 ```
 
-6. For documentation go to `/api#/`
+5. For documentation go to `/api#/`
