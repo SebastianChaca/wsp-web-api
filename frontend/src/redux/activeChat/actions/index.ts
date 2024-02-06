@@ -1,1 +1,0 @@
-export { responseTo } from './responseTo';
