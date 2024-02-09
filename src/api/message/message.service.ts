@@ -97,7 +97,7 @@ export class MessageService {
         throw new NotFoundException('Message not found');
       }
       const populatedMessage = await this.messageModel.populate(message, {
-        path: 'from to iconReactions.user',
+        path: 'from to iconReactions.user responseTo',
         // select: 'name email id',
       });
 
