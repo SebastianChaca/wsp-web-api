@@ -55,6 +55,7 @@ export class MessageController {
     @Body() updateMessageDto: UpdateMessageDto,
     @GetUser() user: User,
   ) {
+    //TODO:testear image
     return this.messageService.updateIconReaction(id, updateMessageDto, user);
   }
 

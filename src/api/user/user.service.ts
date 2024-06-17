@@ -6,6 +6,7 @@ import { Model } from 'mongoose';
 import { AuthService } from 'src/api/auth/auth.service';
 import { SendEmailService } from '../send-email/send-email.service';
 import { UserApiResponse } from './interfaces/userApiResponse.interface';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -34,6 +35,25 @@ export class UserService {
     } catch (error) {
       this.logger.error('Create user error');
       //handle by unique constraing filter
+      throw error;
+    }
+  }
+
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    try {
+      this.logger.log('Update user');
+      const updatedUser = await this.userModel.findByIdAndUpdate(
+        id,
+        { ...updateUserDto },
+        { new: true, runValidators: true }, // `new` returns the updated document, `runValidators` ensures schema validations are applied
+      );
+      if (!updatedUser) {
+        throw new Error(`User with ID ${id} not found`);
+      }
+      return updatedUser;
+    } catch (error) {
+      this.logger.error('Update user error');
+
       throw error;
     }
   }

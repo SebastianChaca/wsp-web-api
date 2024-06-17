@@ -38,4 +38,7 @@ export class CreateUserDto {
   @IsString()
   @MinLength(1)
   name: string;
+
+  @IsString()
+  image?: string;
 }

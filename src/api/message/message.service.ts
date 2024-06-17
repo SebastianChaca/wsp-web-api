@@ -185,6 +185,7 @@ export class MessageService {
         .populate('from', '-roles -isActive -online -lastActive')
         .populate('responseTo', '-responseTo -from -to -seen')
         .populate('iconReactions.user', 'id name email _id')
+        .populate('image', 'secureUrl reference')
         .sort({ createdAt: 'desc' });
 
       this.eventGateway.sendSeenMessages(updatedMessages, id);

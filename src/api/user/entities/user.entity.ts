@@ -111,6 +111,14 @@ export class User {
     description: 'if current user is a super admin',
   })
   isSuperAdmin: boolean;
+
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Image',
+    required: false,
+    default: null,
+  })
+  image: string;
 }
 export const UserSchema = SchemaFactory.createForClass(User);
 
@@ -119,4 +127,8 @@ UserSchema.virtual('isAdmin').get(function () {
 });
 UserSchema.virtual('isSuperAdmin').get(function () {
   return this.roles === 'super-admin';
+});
+
+UserSchema.virtual('hasImage').get(function () {
+  return !!this.image;
 });

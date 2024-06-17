@@ -1,10 +1,14 @@
-import { Controller, Post, Body, UseFilters } from '@nestjs/common';
+import { Controller, Post, Body, UseFilters, Patch } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UniqueConstraintFilter } from 'src/common/filters/uniquie-constraint.filter';
 import { Logger } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateUserSwaggerDecorator } from './swagger/controller/createUserSwagger';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { Auth } from '../auth/decorators/auth.decorator';
+import { GetUser } from '../auth/decorators/get-user.decorator';
+import { User } from './entities/user.entity';
 
 @ApiTags('User')
 @Controller('user')
@@ -29,11 +33,11 @@ export class UserController {
   // findOne(@Param('id') id: string) {
   //   return this.userService.findOne(+id);
   // }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-  //   return this.userService.update(+id, updateUserDto);
-  // }
+  @Auth()
+  @Patch()
+  update(@GetUser() user: User, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.update(user.id, updateUserDto);
+  }
 
   // @Delete(':id')
   // remove(@Param('id') id: string) {
