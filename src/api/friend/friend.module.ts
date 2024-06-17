@@ -10,6 +10,8 @@ import { MessageService } from '../message/message.service';
 import { EventsGateway } from 'src/events/events.gateway';
 import { EventsModule } from 'src/events/events.module';
 import { FriendutilsService } from './friendutils/friendutils.service';
+import { ImagesService } from '../images/images.service';
+import { ImagesModule } from '../images/images.module';
 
 @Module({
   controllers: [FriendController],
@@ -22,6 +24,7 @@ import { FriendutilsService } from './friendutils/friendutils.service';
     ]),
     AuthModule,
     EventsModule,
+    ImagesModule,
   ],
   exports: [FriendService, FriendutilsService],
 })

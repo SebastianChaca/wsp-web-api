@@ -93,5 +93,21 @@ export class Message {
     ],
   })
   iconReactions: { user: User; icon: string; createdAt: Date }[];
+
+  @ApiProperty({
+    description: 'response to message',
+    example: 'hi !',
+  })
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Image',
+    required: false,
+    default: null,
+  })
+  image: string;
 }
 export const MessageSchema = SchemaFactory.createForClass(Message);
+
+MessageSchema.virtual('hasImage').get(function () {
+  return !!this.image;
+});

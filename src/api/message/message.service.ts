@@ -10,6 +10,7 @@ import { EventsGateway } from 'src/events/events.gateway';
 import { FriendutilsService } from '../friend/friendutils/friendutils.service';
 import { Pagination } from 'src/common/interfaces/totalPagination.interface';
 import { UpdateMessageDto } from './dto/update-message.dto';
+import { ImagesService } from '../images/images.service';
 
 @Injectable()
 export class MessageService {
@@ -19,10 +20,11 @@ export class MessageService {
     private readonly messageModel: Model<Message>,
     private readonly eventGateway: EventsGateway,
     private readonly friendUtilsService: FriendutilsService,
+    private readonly imageService: ImagesService,
   ) {}
   async create(createMessageDto: CreateMessageDto): Promise<MessageDocument> {
     this.logger.log('create message');
-    const { to, from, message, responseTo } = createMessageDto;
+    const { to, from, message, responseTo, image } = createMessageDto;
     await this.friendUtilsService.checkRelationAndStatus(from, to);
     try {
       const createMessage = await this.messageModel.create({
@@ -30,11 +32,17 @@ export class MessageService {
         from,
         message,
         responseTo,
+        image,
       });
+
+      console.log(createMessage.id);
+      await this.imageService.addReference(createMessage.id, image);
+
       await this.messageModel.populate(createMessage, [
         { path: 'to' },
         { path: 'from' },
         { path: 'responseTo' },
+        { path: 'image' },
       ]);
       //update notif
       await this.friendUtilsService.updateNotification(from, to);
@@ -72,6 +80,7 @@ export class MessageService {
         .populate('from', '-roles -isActive -online -lastActive')
         .populate('responseTo', '-responseTo -from -to -seen')
         .populate('iconReactions.user', 'id name email')
+        .populate('image', 'secureUrl reference')
         .limit(limit)
         .skip(currentPage * limit);
       return {

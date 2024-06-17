@@ -9,6 +9,7 @@ import { EventsModule } from 'src/events/events.module';
 import { Friend, FriendSchema } from '../friend/entities/friend.entity';
 import { FriendutilsService } from '../friend/friendutils/friendutils.service';
 import { FriendModule } from '../friend/friend.module';
+import { ImagesModule } from '../images/images.module';
 
 @Module({
   controllers: [MessageController],
@@ -22,6 +23,7 @@ import { FriendModule } from '../friend/friend.module';
     AuthModule,
     EventsModule,
     FriendModule,
+    ImagesModule,
   ],
   exports: [MessageService],
 })

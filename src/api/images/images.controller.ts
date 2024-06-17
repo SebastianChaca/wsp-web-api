@@ -11,15 +11,16 @@ import {
 import { ImagesService } from './images.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateImageDto } from './dto/create-image.dto';
+import { Auth } from '../auth/decorators/auth.decorator';
 // import { UpdateImageDto } from './dto/update-image.dto';
 
 @Controller('images')
 export class ImagesController {
   constructor(private readonly imagesService: ImagesService) {}
-
+  @Auth()
   @Post()
   @UseInterceptors(FileInterceptor('image'))
-  uploadImage(
+  async uploadImage(
     @UploadedFile(
       new ParseFilePipe({
         validators: [
@@ -31,6 +32,14 @@ export class ImagesController {
     image: Express.Multer.File,
     @Body() createImageDto: CreateImageDto,
   ) {
-    return this.imagesService.cloudinaryUpload(image, createImageDto.folder);
+    const cloudinaryImage = await this.imagesService.cloudinaryUpload(
+      image,
+      createImageDto.folder,
+    );
+    return await this.imagesService.create(
+      cloudinaryImage.url,
+      cloudinaryImage.secure_url,
+      createImageDto.folder,
+    );
   }
 }

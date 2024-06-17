@@ -55,4 +55,8 @@ export class CreateMessageDto {
   @IsOptional()
   @Validate(ContainsValidEmoji)
   iconReactions?: string;
+
+  @IsString()
+  @IsOptional()
+  image: string;
 }
