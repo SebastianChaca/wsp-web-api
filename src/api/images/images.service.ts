@@ -60,13 +60,11 @@ export class ImagesService {
   async addReference(reference: string, photoId: string) {
     try {
       this.logger.log('update image reference');
-      const update = await this.imageModel.findByIdAndUpdate(
+      return await this.imageModel.findByIdAndUpdate(
         photoId,
         { reference },
         { new: true },
       );
-      console.log(update);
-      return update;
     } catch (error) {
       this.logger.error('update reference image error');
       throw error;

@@ -35,7 +35,6 @@ export class MessageService {
         image,
       });
 
-      console.log(createMessage.id);
       await this.imageService.addReference(createMessage.id, image);
 
       await this.messageModel.populate(createMessage, [
