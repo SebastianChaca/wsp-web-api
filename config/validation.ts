@@ -12,4 +12,8 @@ export const validationSchema = Joi.object({
   CLIENTESECRET: Joi.string(),
   REFRESH_TOKEN_GMAIL: Joi.string(),
   WEBAPP_URL: Joi.string().required().default('localhost:3000'),
+  CLOUDINARY_URL: Joi.string().required(),
+  CLOUDINARY_NAME: Joi.string().required(),
+  CLOUDINARY_API_KEY: Joi.string().required(),
+  CLOUDINARY_API_SECRET: Joi.string().required(),
 });

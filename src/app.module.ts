@@ -11,6 +11,7 @@ import { FriendModule } from './api/friend/friend.module';
 import { MessageModule } from './api/message/message.module';
 import { SeedModule } from './api/seed/seed.module';
 import {
+  cloudinary,
   configuration,
   emailSenderConfiguration,
   gmailConfiguration,
@@ -19,13 +20,19 @@ import { validationSchema } from 'config/validation';
 import { SendEmailModule } from './api/send-email/send-email.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { EventsModule } from './events/events.module';
+import { ImagesModule } from './api/images/images.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `${process.cwd()}/config/.env.${process.env.NODE_ENV}`,
-      load: [configuration, emailSenderConfiguration, gmailConfiguration],
+      load: [
+        configuration,
+        emailSenderConfiguration,
+        gmailConfiguration,
+        cloudinary,
+      ],
       validationSchema: validationSchema,
     }),
     MongooseModule.forRootAsync({
@@ -64,6 +71,7 @@ import { EventsModule } from './events/events.module';
       },
     ]),
     EventsModule,
+    ImagesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
