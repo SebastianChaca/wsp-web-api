@@ -21,7 +21,9 @@ import { SendEmailModule } from './api/send-email/send-email.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { EventsModule } from './events/events.module';
 import { ImagesModule } from './api/images/images.module';
-
+import { ScheduleModule } from '@nestjs/schedule';
+import { TasksModule } from './tasks/tasks.module';
+import { TasksService } from './tasks/tasks.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -72,8 +74,10 @@ import { ImagesModule } from './api/images/images.module';
     ]),
     EventsModule,
     ImagesModule,
+    ScheduleModule.forRoot(),
+    TasksModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, TasksService],
 })
 export class AppModule {}

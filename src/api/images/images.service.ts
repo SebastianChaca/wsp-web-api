@@ -17,12 +17,12 @@ export class ImagesService {
     folder: string,
   ): Promise<CloudinaryResponse> {
     return new Promise<CloudinaryResponse>((resolve, reject) => {
-      this.logger.log('upload image to cloudinary');
+      this.logger.log('Upload image to cloudinary');
       const uploadStream = cloudinary.uploader.upload_stream(
         { folder },
         (error, result) => {
           if (error) {
-            this.logger.error('upload image to cloudinary error');
+            this.logger.error('Upload image to cloudinary error');
             return reject(error);
           }
           resolve(result);
@@ -33,40 +33,78 @@ export class ImagesService {
     });
   }
 
-  async create(url: string, secureUrl: string, folder: string) {
+  async create(
+    url: string,
+    secureUrl: string,
+    folder: string,
+    publicID: string,
+  ) {
     try {
-      this.logger.log('create image in db');
+      this.logger.log('Create image in db');
 
       const createImage = await this.imageModel.create({
         url,
         secureUrl,
         folder,
+        publicID,
       });
       return {
         id: createImage.id,
         secureUrl: createImage.secureUrl,
       };
     } catch (error) {
-      this.logger.error('create image in db error');
+      this.logger.error('Create image in db error');
       throw error;
     }
   }
 
   async addReference(reference: string | null, photoId: string) {
     try {
-      this.logger.log('update image reference');
+      this.logger.log('Update image reference');
       return await this.imageModel.findByIdAndUpdate(
         photoId,
         { reference },
         { new: true },
       );
     } catch (error) {
-      this.logger.error('update reference image error');
+      this.logger.error('Update reference image error');
       throw error;
     }
   }
 
   async findReference(reference: string, folder: string) {
-    return await this.imageModel.findOne({ reference, folder });
+    try {
+      this.logger.log('Find image reference in db');
+      return await this.imageModel.findOne({ reference, folder });
+    } catch (error) {
+      this.logger.error('Find image reference in db error');
+      throw error;
+    }
+  }
+
+  async findImagesWithoutReference() {
+    try {
+      this.logger.log('Find image without reference in db');
+      return (await this.imageModel.find({ reference: null }).exec()).map(
+        (element) => element.publicID,
+      );
+    } catch (error) {
+      this.logger.error('Find image without reference in db error');
+      throw error;
+    }
+  }
+
+  async removeImagesByPublicIDs(publicIDs: string[]) {
+    try {
+      this.logger.log(`Removing images with publicIDs: ${publicIDs}`);
+      const result = await this.imageModel
+        .deleteMany({ publicID: { $in: publicIDs } })
+        .exec();
+      this.logger.log(`${result.deletedCount} images removed`);
+      return result;
+    } catch (error) {
+      this.logger.error('Error removing images by publicIDs', error);
+      throw error;
+    }
   }
 }

@@ -12,6 +12,14 @@ export class Image {
   id: string;
 
   @ApiProperty({
+    example: '6541ad729d7d41d1d9dfb6e0',
+    description: 'photo public id',
+    uniqueItems: true,
+  })
+  @Prop()
+  publicID: string;
+
+  @ApiProperty({
     example: 'http://',
     description: 'photo url',
   })

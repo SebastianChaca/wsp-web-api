@@ -41,10 +41,12 @@ export class ImagesController {
       image,
       folderWithId,
     );
+
     return await this.imagesService.create(
       cloudinaryImage.url,
       cloudinaryImage.secure_url,
       folderWithId,
+      cloudinaryImage.public_id,
     );
   }
 }
