@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { ImagesService } from 'src/api/images/images.service';
-import { v2 as cloudinary } from 'cloudinary';
+
 @Injectable()
 export class TasksService {
   private readonly logger = new Logger(TasksService.name);
@@ -10,14 +10,11 @@ export class TasksService {
   async removeUnusedImages() {
     try {
       this.logger.log('Start task for removing images without reference');
-      const findImageWithoutReference =
-        await this.imageService.findImagesWithoutReference();
+      const publicIds = await this.imageService.findImagesWithoutReference();
 
-      if (findImageWithoutReference.length > 0) {
-        await cloudinary.api.delete_resources(findImageWithoutReference);
-        await this.imageService.removeImagesByPublicIDs(
-          findImageWithoutReference,
-        );
+      if (publicIds.length > 0) {
+        await this.imageService.removeImagesFromCloud(publicIds);
+        await this.imageService.removeImagesByPublicIDs(publicIds);
       }
     } catch (error) {
       throw error;
