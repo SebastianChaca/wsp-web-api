@@ -13,6 +13,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateImageDto } from './dto/create-image.dto';
 import { Auth } from '../auth/decorators/auth.decorator';
 // import { UpdateImageDto } from './dto/update-image.dto';
+import { GetUser } from '../auth/decorators/get-user.decorator';
+import { User } from '../user/entities/user.entity';
 
 @Controller('images')
 export class ImagesController {
@@ -31,15 +33,18 @@ export class ImagesController {
     )
     image: Express.Multer.File,
     @Body() createImageDto: CreateImageDto,
+    @GetUser() user: User,
   ) {
+    //TODO: remove user.id for a better id, exposing DB Ids is bad idea.
+    const folderWithId = `${user.id}/${createImageDto.folder}`;
     const cloudinaryImage = await this.imagesService.cloudinaryUpload(
       image,
-      createImageDto.folder,
+      folderWithId,
     );
     return await this.imagesService.create(
       cloudinaryImage.url,
       cloudinaryImage.secure_url,
-      createImageDto.folder,
+      folderWithId,
     );
   }
 }

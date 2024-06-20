@@ -33,12 +33,7 @@ export class ImagesService {
     });
   }
 
-  async create(
-    url: string,
-    secureUrl: string,
-    folder: string,
-    // reference?: string,
-  ) {
+  async create(url: string, secureUrl: string, folder: string) {
     try {
       this.logger.log('create image in db');
 
@@ -57,7 +52,7 @@ export class ImagesService {
     }
   }
 
-  async addReference(reference: string, photoId: string) {
+  async addReference(reference: string | null, photoId: string) {
     try {
       this.logger.log('update image reference');
       return await this.imageModel.findByIdAndUpdate(
@@ -69,5 +64,9 @@ export class ImagesService {
       this.logger.error('update reference image error');
       throw error;
     }
+  }
+
+  async findReference(reference: string, folder: string) {
+    return await this.imageModel.findOne({ reference, folder });
   }
 }
