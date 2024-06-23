@@ -36,7 +36,7 @@ export class CreateMessageDto {
   })
   @IsString()
   @ValidateIf((o) => !o.image)
-  message: string;
+  message?: string;
 
   @ApiProperty({
     description: 'chat message status',

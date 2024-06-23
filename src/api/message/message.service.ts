@@ -115,10 +115,20 @@ export class MessageService {
       if (!message) {
         throw new NotFoundException('Message not found');
       }
-      const populatedMessage = await this.messageModel.populate(message, {
-        path: 'from to iconReactions.user responseTo',
-        // select: 'name email id',
-      });
+      const populatedMessage = await this.messageModel.populate(message, [
+        { path: 'from' },
+        { path: 'to' },
+        { path: 'image' },
+        { path: 'iconReactions.user' },
+        {
+          path: 'responseTo',
+
+          populate: {
+            path: 'image',
+            select: 'secureUrl reference',
+          },
+        },
+      ]);
 
       await this.friendUtilsService.checkRelationAndStatus(
         message.from.id,
