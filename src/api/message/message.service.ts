@@ -204,7 +204,14 @@ export class MessageService {
         })
         .populate('to', '-roles -isActive -online -lastActive')
         .populate('from', '-roles -isActive -online -lastActive')
-        .populate('responseTo', '-responseTo -from -to -seen')
+        .populate({
+          path: 'responseTo',
+          select: '-responseTo -from -to -seen',
+          populate: {
+            path: 'image',
+            select: 'secureUrl reference',
+          },
+        })
         .populate('iconReactions.user', 'id name email _id')
         .populate('image', 'secureUrl reference')
         .sort({ createdAt: 'desc' });
