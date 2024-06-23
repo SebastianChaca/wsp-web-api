@@ -96,12 +96,21 @@ export class ImagesService {
 
   async removeImagesByPublicIDs(publicIDs: string[]) {
     try {
-      this.logger.log(`Removing images with publicIDs: ${publicIDs}`);
+      this.logger.log(`Removing images with publicIDs: ${publicIDs} in db`);
       const result = await this.imageModel
         .deleteMany({ publicID: { $in: publicIDs } })
         .exec();
       this.logger.log(`${result.deletedCount} images removed`);
       return result;
+    } catch (error) {
+      this.logger.error('Error removing images by publicIDs', error);
+      throw error;
+    }
+  }
+  async removeImagesFromCloud(publicIDs: string[]) {
+    try {
+      this.logger.log(`Removing images with publicIDs: ${publicIDs} in cloud`);
+      await cloudinary.api.delete_resources(publicIDs);
     } catch (error) {
       this.logger.error('Error removing images by publicIDs', error);
       throw error;

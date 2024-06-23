@@ -55,7 +55,7 @@ export class Message {
     description: 'chat message',
     example: 'hey !',
   })
-  @Prop({ required: true })
+  @Prop()
   message: string;
 
   @ApiProperty({
