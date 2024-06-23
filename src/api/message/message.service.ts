@@ -40,7 +40,11 @@ export class MessageService {
       await this.messageModel.populate(createMessage, [
         { path: 'to' },
         { path: 'from' },
-        { path: 'responseTo' },
+        {
+          path: 'responseTo',
+          select: '-responseTo -from -to -seen',
+          populate: { path: 'image', select: 'secureUrl ' },
+        },
         { path: 'image' },
       ]);
       //update notif
@@ -77,9 +81,16 @@ export class MessageService {
         .sort({ createdAt: 'desc' })
         .populate('to', '-roles -isActive -online -lastActive')
         .populate('from', '-roles -isActive -online -lastActive')
-        .populate('responseTo', '-responseTo -from -to -seen')
+        .populate({
+          path: 'responseTo',
+          select: '-responseTo -from -to -seen',
+          populate: {
+            path: 'image',
+            select: 'secureUrl reference',
+          },
+        })
         .populate('iconReactions.user', 'id name email')
-        .populate('image', 'secureUrl reference')
+        .populate('image', 'secureUrl')
         .limit(limit)
         .skip(currentPage * limit);
       return {
